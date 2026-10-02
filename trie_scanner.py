@@ -14,7 +14,6 @@ Usage:
 import re
 import json
 import argparse
-import load_data
 from collections import Counter
 
 DATA_DIR = "data"
@@ -88,6 +87,55 @@ BLOCK_CONCEPTS = {
     "D032882",  # Comprehension
     "D012926",  # Social Control, Formal
     "D016449",  # Randomized Controlled Trial (study design)
+    # round 4 (from the full 50k scan): ordinary words / trial boilerplate
+    "D006761",  # Hospitals
+    "D000075202",  # Contraindications
+    "D035061",  # Control Groups
+    "D010820",  # Physicians
+    "D007854",  # Lead              ("lead")
+    "D014495",  # Universities
+    "D012380",  # Role
+    "D008017",  # Life Expectancy
+    "D019369",  # Life
+    "D058028",  # Research Report   ("report")
+    "D020481",  # Index
+    "D014937",  # Work
+    "D010290",  # Parents
+    "D010808",  # Physical Examination
+    "D001071",  # Appointments and Schedules ("visit", "schedule")
+    "D010865",  # Pilot Projects
+    "D005544",  # Forecasting       ("future")
+    "D015507",  # Drugs, Investigational
+    "D007600",  # Judgment
+    "D009729",  # Nursing
+    "D002965",  # Classification
+    "D003365",  # Costs and Cost Analysis
+    "D059039",  # Standard of Care
+    "D011996",  # Records
+    "D004493",  # Education         ("workshop")
+    "D003695",  # Delivery of Health Care ("healthcare")
+    "D016454",  # Review
+    "D019484",  # Address
+    "D005783",  # Gender Identity   ("gender")
+    "D003643",  # Death
+    "D003710",  # Demography
+    "D055656",  # Prescriptions
+    "D006301",  # Health Services Needs and Demand ("needs")
+    "D000070356",  # Pilots
+    "D008283",  # Maintenance
+    "D017063",  # Outcome Assessment, Health Care
+    "D064888",  # Observational Study
+    "D011209",  # Power, Psychological ("power")
+    "D008091",  # Literature
+    "D001519",  # Behavior
+    "D013577",  # Syndrome
+    # round 4: reproductive eligibility boilerplate (exclusion criteria,
+    # not what the trial is about). Remove from here to un-block.
+    "D011258",  # Pregnancy Tests
+    "D037841",  # Pregnant People
+    "D003267",  # Contraception
+    "D003270",  # Contraceptive Agents
+    "D001942",  # Breast Feeding
     # optional (judgment call): outcome / sample-type words that show up
     # in every disease area. Uncomment to block them too.
     # "D010336",  # Pathology
