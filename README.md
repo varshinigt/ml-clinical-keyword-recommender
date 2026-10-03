@@ -157,11 +157,4 @@ All matrices are **terms x documents** (rows = MeSH concepts, columns = trials).
 - **Demo suggestions are usually sensible near the top and sometimes noisy further down.** Only the 1,190 frequent concepts can be recommended.
 - The dataset is a 50,000-trial snapshot of the registry, taken through the API on 2 Oct 2026.
 
-## Who did what
 
-| | Varshini A (517) | Tejasvi K S (499) |
-|---|---|---|
-| Data | dataset download, MeSH parser | Trie scanner, blocklists, count matrix (`counts.npz`) |
-| Model | TF-IDF and split, model and gradients, metrics, hyperparameter search, training, popularity baseline, `recommend()` | |
-| Demo | model side (`recommend.py`) | query side (`demo_query.py`) |
-| Repo and report | repository setup, results, README | README sections for extraction and demo, write-up sections for dataset and extraction |
