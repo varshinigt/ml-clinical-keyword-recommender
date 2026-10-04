@@ -33,12 +33,13 @@ Selected hyperparameters (by dev APTK): `tau = -0.001, k = 1000, lambda = 0.01, 
 |---|---|---|---|
 | Random picks (test) | | | 0.0088 |
 | Most popular concepts (test, `baseline_popularity.py`) | | | 0.1529 |
+| Co-occurrence baseline (test, `baseline_cooccurrence.py`) | | | 0.2249 |
 | Our model, dev (4,973 trials) | 0.00794 | 0.02186 | 0.3335 |
 | **Our model, test (4,974 trials)** | **0.00814** | **0.02236** | **0.3390** |
 
-The model's top-3 precision is more than 30 times that of random picks and more than twice that of always recommending the most popular concepts. In our search the top four settings differ by less than 0.003 in dev APTK (0.3278 to 0.3307), so we do not claim one of them is clearly best. The full search table is in `results/search_results.csv`, plots are in `results/figs/`. These numbers are for the raw model output; the display filter used in the demo (see below) is not applied during evaluation.
+The model's top-3 precision is more than 30 times that of random picks, more than twice that of always recommending the most popular concepts, and about 1.5 times that of a co-occurrence baseline (it scores each concept by summing, over the query concepts, the share of training trials with that concept that also contain the candidate). In our search the top four settings differ by less than 0.003 in dev APTK (0.3278 to 0.3307), so we do not claim one of them is clearly best. The full search table is in `results/search_results.csv`, plots are in `results/figs/`. These numbers are for the raw model output; the display filter used in the demo (see below) is not applied during evaluation.
 
-For reference, the paper reports on its test set an MSE of 0.0081 and an APTK of 0.479 with 947 terms, and an APTK of 0.503 with 15,071 terms. Our MSE is similar, our APTK is lower. We used a 50,000-trial sample, 1,190 terms, and our own extraction with a blocklist of generic concepts. We did not run experiments to find out which of these causes the difference.
+For reference, on its test set the paper reports an MSE of 0.0081 and an APTK of 0.479 with 947 terms, and an MSE of 0.0010 and an APTK of 0.503 with 15,071 terms. Our MSE is similar to the 947-term run (MSE depends on the number of terms, so the runs are not directly comparable), our APTK is lower. We used a 50,000-trial sample, 1,190 terms, and our own extraction with a blocklist of generic concepts. We did not run experiments to find out which of these causes the difference.
 
 ## Repository layout
 
@@ -55,6 +56,7 @@ test_cf.py            gradient check + training test on synthetic data
 search_hparams.py     learning-rate search and (tau, k, lambda) grid search, plots
 train.py              final training with the best hyperparameters, saves data/model.npz
 baseline_popularity.py  "always recommend the most popular concepts" baseline
+baseline_cooccurrence.py  co-occurrence baseline (sum of P(candidate | query concept))
 recommend.py          recommend(counts_dict, top_k): the model side of the demo
 demo_query.py         typed query -> MeSH concepts -> model -> suggested keywords
 data_parts/           the trial dataset in 4 parquet parts
@@ -87,6 +89,7 @@ python3 build_tfidf.py                 # TF-IDF + 8:1:1 split (m = 1190, 49,732 
 python3 search_hparams.py --fast       # tiny test of the search (about 1 min)
 python3 train.py 30                    # final training and evaluation (about 3 min)
 python3 baseline_popularity.py         # popularity baseline
+python3 baseline_cooccurrence.py       # co-occurrence baseline
 ```
 
 `train.py` prints the dev and test metrics and writes `data/model.npz`, `data/final_results.json` and `figs/fig4_final_training.png`.
@@ -155,6 +158,6 @@ All matrices are **terms x documents** (rows = MeSH concepts, columns = trials).
 - **With the selected `tau = -0.001, k = 1000`, W is about 1 for almost every pair of concepts**, so the neighbour weighting has little effect, which is also what the paper found (its final values are the same `tau` and `k`).
 - **MSER caveat.** MSER divides by the number of cells that are non-zero in the truth or the prediction, so it depends on how sparse the predictions are. We compare models mainly with MSE and APTK.
 - **Demo suggestions are usually sensible near the top and sometimes noisy further down.** Only the 1,190 frequent concepts can be recommended.
-- The dataset is a 50,000-trial snapshot of the registry, taken through the API on 2 Oct 2026.
+- The dataset is the first 50,000 records returned by the ClinicalTrials.gov API on 2 Oct 2026 (not a random sample of the registry).
 
 
